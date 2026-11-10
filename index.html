@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Tallyhand</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a split hero (claim left, live-looking ledger check right), then a quiet single column of features, pilot form and FAQ. Ledger paper is the motif: ruled rows, tabular figures, a highlighter for problems. */
+:root {
+  --bg: #f3f6f4;
+  --paper: #ffffff;
+  --ink: #15211c;
+  --muted: #55655e;
+  --rule: #d5dfda;
+  --rule-soft: #e7eeea;
+  --green: #1f6b4f;
+  --green-ink: #ffffff;
+  --green-soft: #e1efe8;
+  --flag: #f5d76e;
+  --flag-ink: #4a3a00;
+  --flag-soft: #fdf4d2;
+  --red: #b2412f;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+  --step-4: clamp(2.25rem, 1.4rem + 3.6vw, 3.6rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1613; --paper: #16201c; --ink: #e6eee9; --muted: #9db0a7;
+    --rule: #2b3934; --rule-soft: #212d28; --green: #5cc49a; --green-ink: #0b1a14;
+    --green-soft: #183328; --flag: #e8c75a; --flag-ink: #2a2100; --flag-soft: #2e2a17;
+    --red: #ef8a78; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1613; --paper: #16201c; --ink: #e6eee9; --muted: #9db0a7;
+  --rule: #2b3934; --rule-soft: #212d28; --green: #5cc49a; --green-ink: #0b1a14;
+  --green-soft: #183328; --flag: #e8c75a; --flag-ink: #2a2100; --flag-soft: #2e2a17;
+  --red: #ef8a78; color-scheme: dark;
+}
+
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--green); }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+/* Top bar */
+.top { padding-block: 20px; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: var(--step-1); letter-spacing: -0.01em; }
+.brand-mark { width: 28px; height: 28px; border-radius: 6px; background: var(--green); display: grid; place-items: center; }
+.brand-mark span { display: block; width: 14px; height: 2px; background: var(--green-ink); box-shadow: 0 -5px 0 var(--green-ink), 0 5px 0 var(--green-ink); }
+.top-link { font-weight: 600; font-size: var(--step--1); text-decoration: none; padding: 8px 14px; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink); background: var(--paper); }
+
+/* Hero */
+.hero { padding-block: 32px 64px; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 48px; align-items: center; }
+.eyebrow { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+.hero h1 { font-size: var(--step-4); font-weight: 800; letter-spacing: -0.025em; }
+.hero h1 mark { background: linear-gradient(transparent 58%, var(--flag) 58%, var(--flag) 92%, transparent 92%); color: inherit; padding: 0 2px; }
+.lede { margin-top: 20px; font-size: var(--step-1); color: var(--muted); max-width: 34em; }
+.cta-row { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.btn { font: 600 var(--step-0)/1 var(--font-body); padding: 14px 22px; border-radius: 8px; border: 0; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn-primary { background: var(--green); color: var(--green-ink); }
+.btn-primary:hover { filter: brightness(1.08); }
+.fine { font-size: var(--step--1); color: var(--muted); }
+
+/* Ledger mock */
+.ledger { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; box-shadow: 0 18px 40px -24px rgba(16, 40, 30, 0.35); overflow: hidden; min-width: 0; }
+.ledger-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+.ledger-title { font-weight: 600; }
+.ledger-sub { font-size: var(--step--1); color: var(--muted); }
+.pill { font: 500 var(--step--1)/1 var(--font-mono); padding: 6px 10px; border-radius: 999px; background: var(--flag-soft); color: var(--ink); border: 1px solid var(--flag); white-space: nowrap; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+th { text-align: left; font: 500 0.72rem/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--rule-soft); white-space: nowrap; }
+th:first-child, td:first-child { padding-left: 18px; }
+th:last-child, td:last-child { padding-right: 18px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tr.flagged td { background: var(--flag-soft); }
+tr.flagged td:first-child { box-shadow: inset 3px 0 0 var(--flag); }
+.neg { color: var(--red); }
+.flag-list { padding: 14px 18px 18px; display: grid; gap: 10px; border-top: 1px solid var(--rule); }
+.flag-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; font-size: var(--step--1); }
+.flag-dot { margin-top: 3px; width: 18px; height: 18px; border-radius: 4px; background: var(--flag); color: var(--flag-ink); font: 600 0.7rem/18px var(--font-mono); text-align: center; }
+.example-note { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); padding: 0 18px 14px; }
+
+/* Sections */
+section.block { padding-block: 56px; border-top: 1px solid var(--rule); }
+.section-head { max-width: 40em; margin-bottom: 32px; display: grid; gap: 12px; }
+.section-head h2 { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.02em; }
+.section-head p { color: var(--muted); font-size: var(--step-1); }
+
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.feature { display: grid; gap: 10px; align-content: start; }
+.feature h3 { font-size: var(--step-1); font-weight: 600; font-family: var(--font-body); }
+.feature p { color: var(--muted); }
+.feature-tag { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); }
+
+.promises { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); }
+.promise { padding: 22px 24px; display: grid; gap: 6px; border-bottom: 1px solid var(--rule-soft); }
+.promise:nth-child(odd) { border-right: 1px solid var(--rule-soft); }
+.promise:nth-last-child(-n+2) { border-bottom: 0; }
+.promise strong { font-weight: 600; }
+.promise span { color: var(--muted); font-size: var(--step--1); }
+
+/* Pilot */
+.pilot { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 48px; align-items: start; }
+.price { margin-top: 24px; display: grid; gap: 12px; }
+.price-row { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px dashed var(--rule); flex-wrap: wrap; }
+.price-row b { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+form { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.field { display: grid; gap: 6px; }
+.field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+label { font-weight: 600; font-size: var(--step--1); }
+input, select, textarea { font: var(--step-0)/1.4 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 11px 12px; width: 100%; box-sizing: border-box; }
+textarea { min-height: 96px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--green); outline-offset: 0; border-color: var(--green); }
+.status { font-size: var(--step--1); padding: 12px 14px; border-radius: 8px; }
+.status.ok { background: var(--green-soft); color: var(--ink); }
+.status.info { background: var(--flag-soft); color: var(--ink); }
+.status.err { background: var(--flag-soft); color: var(--red); }
+
+/* FAQ */
+.faq { display: grid; gap: 0; max-width: 46em; }
+details { border-bottom: 1px solid var(--rule); padding-block: 16px; }
+summary { cursor: pointer; font-weight: 600; font-size: var(--step-1); }
+details p { margin-top: 10px; color: var(--muted); }
+
+footer { padding-block: 32px 48px; border-top: 1px solid var(--rule); font-size: var(--step--1); color: var(--muted); }
+footer .wrap { display: grid; gap: 8px; }
+
+@media (max-width: 860px) {
+  .hero .wrap, .pilot { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .features { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+}
+@media (max-width: 560px) {
+  .promises { grid-template-columns: minmax(0, 1fr); }
+  .promise:nth-child(odd) { border-right: 0; }
+  .promise:nth-last-child(2) { border-bottom: 1px solid var(--rule-soft); }
+  .field-row { grid-template-columns: minmax(0, 1fr); }
+  td, th { padding-left: 12px; padding-right: 12px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  tr.flagged td { animation: mark 900ms ease-out both; }
+  tr.flagged:nth-of-type(4) td { animation-delay: 150ms; }
+  @keyframes mark { from { background: transparent; } }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span></div>Tallyhand</div>
+    <a class="top-link" href="#pilot">Join the pilot</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Chrome extension · for AppFolio accounting teams</p>
+        <h1>Catch ledger problems <mark>before</mark> month-end does.</h1>
+        <p class="lede">Tallyhand works alongside your AppFolio screens. Export any ledger in one click, get a list of posting problems to review, and see which properties are ready to close.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#pilot">Join the free pilot</a>
+          <span class="fine">Read-only. It never changes your books.</span>
+        </div>
+      </div>
+
+      <div class="ledger" aria-label="Example of a tenant ledger review">
+        <div class="ledger-head">
+          <div>
+            <div class="ledger-title">Unit 4B · Tenant ledger</div>
+            <div class="ledger-sub">Maple Court Apartments · October 2026</div>
+          </div>
+          <span class="pill">2 to review</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Date</th><th>Type</th><th>Memo</th><th class="num">Amount</th><th class="num">Balance</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>10/01</td><td>Charge</td><td>Rent – Oct</td><td class="num">1,450.00</td><td class="num">1,450.00</td></tr>
+              <tr><td>10/03</td><td>Receipt</td><td>eCheck</td><td class="num neg">-1,450.00</td><td class="num">0.00</td></tr>
+              <tr class="flagged"><td>10/06</td><td>Late fee</td><td>Auto late fee</td><td class="num">75.00</td><td class="num">75.00</td></tr>
+              <tr class="flagged"><td>10/07</td><td>NSF reversal</td><td>Returned eCheck</td><td class="num">1,450.00</td><td class="num">1,525.00</td></tr>
+              <tr><td>10/09</td><td>Charge</td><td>NSF fee</td><td class="num">35.00</td><td class="num">1,560.00</td></tr>
+              <tr><td>10/12</td><td>Receipt</td><td>Partial payment</td><td class="num neg">-800.00</td><td class="num">760.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flag-list">
+          <div class="flag-item"><div class="flag-dot" aria-hidden="true">1</div><div>Late fee posted on 10/06, after rent was marked paid. The payment bounced on 10/07, so the fee went out of order. Check it against your late-fee policy.</div></div>
+          <div class="flag-item"><div class="flag-dot" aria-hidden="true">2</div><div>Partial payment of $800 after an NSF. Confirm which charges it was applied to before the owner statement runs.</div></div>
+        </div>
+        <p class="example-note">Example data · not a real tenant</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Three jobs, done in the screens you already use</h2>
+        <p>Built for property accountants and bookkeepers who live in AppFolio's ledgers every day.</p>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <span class="feature-tag">Export</span>
+          <h3>Any ledger to Excel, in one click</h3>
+          <p>Tenant ledgers, owner ledgers and transaction lists go straight to CSV or Excel, so you stop copying rows by hand for reconciliations and owner questions.</p>
+        </div>
+        <div class="feature">
+          <span class="feature-tag">Review</span>
+          <h3>A list of posting problems</h3>
+          <p>Flags partial payments, NSF reversals and late fees posted out of order, duplicate or split charges, and fees on zero balances. You decide what to fix.</p>
+        </div>
+        <div class="feature">
+          <span class="feature-tag">Close</span>
+          <h3>Month-end status across properties</h3>
+          <p>One checklist that shows which properties are reconciled, which have open flags, and what's left before statements go out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Safe by design</h2>
+      </div>
+      <div class="promises">
+        <div class="promise"><strong>Read-only</strong><span>Tallyhand reads what's on your screen. It never posts, voids or edits a transaction.</span></div>
+        <div class="promise"><strong>Your data stays in your browser</strong><span>Ledger checks run on your computer. Tenant data isn't sent to our servers.</span></div>
+        <div class="promise"><strong>No AppFolio API key needed</strong><span>It works on any AppFolio plan, using the access you already have.</span></div>
+        <div class="promise"><strong>Not affiliated with AppFolio</strong><span>An independent tool. AppFolio is a trademark of AppFolio, Inc.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="pilot">
+    <div class="wrap pilot">
+      <div>
+        <div class="section-head" style="margin-bottom:0">
+          <h2>Join the pilot</h2>
+          <p>We're working with a small group of AppFolio accounting teams to build the first version. Pilot users get it free and help decide what it does first.</p>
+        </div>
+        <div class="price">
+          <div class="price-row"><span>During the pilot</span><b>Free</b></div>
+          <div class="price-row"><span>After launch, per user</span><b>$29 / month</b></div>
+          <div class="price-row"><span>After launch, teams up to 5</span><b>$99 / month</b></div>
+          <p class="fine">Pilot users keep a founding discount when paid plans start.</p>
+        </div>
+      </div>
+
+      <form id="pilot-form" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Work email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-role">Your role</label>
+            <select id="f-role" name="role" required>
+              <option value="">Choose one</option>
+              <option>Property accountant</option>
+              <option>Bookkeeper</option>
+              <option>Controller / accounting manager</option>
+              <option>Property manager</option>
+              <option>Owner / principal</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-units">Units managed</label>
+            <select id="f-units" name="units">
+              <option value="">Choose one</option>
+              <option>Under 250</option>
+              <option>250–1,000</option>
+              <option>1,000–5,000</option>
+              <option>Over 5,000</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-pain">What do you fix or rebuild by hand every month?</label>
+          <textarea id="f-pain" name="pain" placeholder="For example: exporting tenant ledgers for owner questions, chasing NSF and late-fee mix-ups…"></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Request a pilot spot</button>
+        <div id="form-status" class="status" role="status" hidden></div>
+        <p class="fine">We'll only use your email to contact you about the pilot.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><h2>Questions</h2></div>
+      <div class="faq">
+        <details>
+          <summary>Does Tallyhand change anything in AppFolio?</summary>
+          <p>No. The first version is read-only. It reads the ledger pages you open and shows its findings beside them. Any fixes are made by you, in AppFolio, as usual.</p>
+        </details>
+        <details>
+          <summary>Is this an official AppFolio product?</summary>
+          <p>No. Tallyhand is independent and not affiliated with or endorsed by AppFolio, Inc.</p>
+        </details>
+        <details>
+          <summary>Where does tenant data go?</summary>
+          <p>The checks run in your browser. Exports are saved to your own computer. We don't store tenant or owner data on our servers.</p>
+        </details>
+        <details>
+          <summary>Which browsers does it support?</summary>
+          <p>Google Chrome and Microsoft Edge at launch.</p>
+        </details>
+        <details>
+          <summary>What about Buildium?</summary>
+          <p>Not yet. If you use Buildium, say so in the form. Enough interest will decide whether it comes next.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Tallyhand · an independent tool for property accounting teams.</p>
+    <p>AppFolio is a trademark of AppFolio, Inc. Tallyhand is not affiliated with or endorsed by AppFolio, Inc.</p>
+  </div>
+</footer>
+
+<script>
+  // Set this to a form service URL (e.g. a Formspree endpoint) on the self-hosted copy.
+  const FORM_ENDPOINT = "";
+
+  const form = document.getElementById("pilot-form");
+  const statusEl = document.getElementById("form-status");
+
+  function showStatus(kind, text) {
+    statusEl.className = "status " + kind;
+    statusEl.textContent = text;
+    statusEl.hidden = false;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (!data.name.trim() || !data.role || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      showStatus("err", "Add your name, a valid work email and your role, then send again.");
+      return;
+    }
+    if (!FORM_ENDPOINT) {
+      showStatus("info", "Sign-ups aren't connected on this copy yet, so nothing was sent.");
+      return;
+    }
+    const button = form.querySelector("button");
+    button.disabled = true;
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      showStatus("ok", "Thanks, you're on the list. We'll email you within a few days to set up a short call.");
+    } catch {
+      showStatus("err", "Your request didn't go through. Check your connection and send it again.");
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
