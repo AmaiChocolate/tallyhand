@@ -310,6 +310,7 @@ footer .wrap { display: grid; gap: 8px; }
           <label for="f-pain">What do you fix or rebuild by hand every month?</label>
           <textarea id="f-pain" name="pain" placeholder="For example: exporting tenant ledgers for owner questions, chasing NSF and late-fee mix-ups…"></textarea>
         </div>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         <button class="btn btn-primary" type="submit">Request a pilot spot</button>
         <div id="form-status" class="status" role="status" hidden></div>
         <p class="fine">We'll only use your email to contact you about the pilot.</p>
@@ -383,9 +384,14 @@ footer .wrap { display: grid; gap: 8px; }
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, _subject: "Tallyhand pilot request: " + data.name }),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        const detail = Array.isArray(body.errors) ? body.errors.map((e) => e.message).join(" ") : "";
+        showStatus("err", detail ? "Your request didn't go through: " + detail : "Your request didn't go through. Check your connection and send it again.");
+        return;
+      }
       form.reset();
       showStatus("ok", "Thanks, you're on the list. We'll email you within a few days to set up a short call.");
     } catch {
